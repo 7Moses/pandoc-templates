@@ -1,95 +1,75 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+% kmq: I did a compare to jgm on 9 February, 2015 19.30, his file is dated 31 January 2015
+
+%kmq:
+\usepackage{xcolor}
+
+%kmq: in the presence of MinionPro, I disabled the below, see
 $if(fontfamily)$
-\usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+\usepackage[opticals,fullfamily,footnotefigures]{MinionPro}
 $else$
-\usepackage{lmodern}
+%\usepackage{MinionPro}
+\usepackage[opticals,fullfamily,footnotefigures]{MinionPro}
 $endif$
 $if(linestretch)$
 \usepackage{setspace}
 \setstretch{$linestretch$}
 $endif$
-\usepackage{amssymb,amsmath}
+%kmq: in the presence of MinionPro, I disabled the below, see http://www.latex-community.org/forum/viewtopic.php?f=46&t=17459&p=61308
+%\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
+
+% kmq: 26 June, 2015 21.19:  fixltx2e is not needed in MacTex-2015
+%\usepackage{fixltx2e} % provides \textsubscript
+
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
-  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  % was \usepackage[utf8]{inputenc}, changed it to
+  \usepackage{inputenc}
 $if(euro)$
   \usepackage{eurosym}
 $endif$
 \else % if luatex or xelatex
   \ifxetex
     \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
   \else
     \usepackage{fontspec}
   \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-$if(euro)$
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \newcommand{\euro}{€}
-$endif$
 $if(mainfont)$
-    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+    \setmainfont{$mainfont$}
 $endif$
 $if(sansfont)$
-    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
+    \setsansfont{$sansfont$}
 $endif$
 $if(monofont)$
-    \setmonofont[Mapping=tex-ansi$if(monofontoptions)$,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$$endif$]{$monofont$}
+    \setmonofont[Mapping=tex-ansi]{$monofont$}
 $endif$
 $if(mathfont)$
-    \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
-$endif$
-$if(CJKmainfont)$
-    \usepackage{xeCJK}
-    \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+    \setmathfont(Digits,Latin,Greek){$mathfont$}
 $endif$
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+% kmq: 26 June, 2015 20.17:  UnCommented out % microtype
 % use microtype if available
 \IfFileExists{microtype.sty}{%
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+
 $if(geometry)$
 \usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
 $endif$
-\usepackage{hyperref}
-$if(colorlinks)$
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
-$endif$
-\hypersetup{unicode=true,
-$if(title-meta)$
-            pdftitle={$title-meta$},
-$endif$
-$if(author-meta)$
-            pdfauthor={$author-meta$},
-$endif$
-$if(keywords)$
-            pdfkeywords={$for(keywords)$$keywords$$sep$; $endfor$},
-$endif$
-$if(colorlinks)$
-            colorlinks=true,
-            linkcolor=$if(linkcolor)$$linkcolor$$else$Maroon$endif$,
-            citecolor=$if(citecolor)$$citecolor$$else$Blue$endif$,
-            urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
-$else$
-            pdfborder={0 0 0},
-$endif$
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
 $if(lang)$
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
-$if(babel-newcommands)$
-  $babel-newcommands$
-$endif$
-\else
+\ifxetex
   \usepackage{polyglossia}
-  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
-$for(polyglossia-otherlangs)$
-  \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
-$endfor$
+  \setmainlanguage{$mainlang$}
+\else
+  \usepackage[shorthands=off,$lang$]{babel}
 \fi
 $endif$
 $if(natbib)$
@@ -97,10 +77,10 @@ $if(natbib)$
 \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
 $endif$
 $if(biblatex)$
-\usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
-$if(biblatexoptions)$\ExecuteBibliographyOptions{$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$}$endif$
+\usepackage{biblatex}
 $for(bibliography)$
 \addbibresource{$bibliography$}
+%kmq: See PandocAssets, where I used a specific bibliography, the file is called default.latex copy, 17 May, 2015 09.56:
 $endfor$
 $endif$
 $if(listings)$
@@ -114,7 +94,7 @@ $highlighting-macros$
 $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
-\VerbatimFootnotes % allows verbatim text in footnotes
+\VerbatimFootnotes
 $endif$
 $if(tables)$
 \usepackage{longtable,booktabs}
@@ -130,6 +110,23 @@ $if(graphics)$
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 $endif$
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={$author-meta$},
+            pdftitle={$title-meta$},
+            colorlinks=true,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
 $if(links-as-notes)$
 % Make links footnotes instead of hotlinks:
 \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
@@ -139,15 +136,8 @@ $if(strikeout)$
 % avoid problems with \sout in headers with hyperref:
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
 $endif$
-$if(indent)$
-$else$
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-$endif$
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -156,8 +146,21 @@ $if(numbersections)$
 $else$
 \setcounter{secnumdepth}{0}
 $endif$
-$if(subparagraph)$
-$else$
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+
+$if(title)$
+\title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
+$endif$
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+\date{$date$}
+$for(header-includes)$
+$header-includes$
+$endfor$
+
 % Redefines (sub)paragraphs to behave more like sections
 \ifx\paragraph\undefined\else
 \let\oldparagraph\paragraph
@@ -167,39 +170,46 @@ $else$
 \let\oldsubparagraph\subparagraph
 \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-$endif$
-$if(dir)$
-\ifxetex
-  % load bidi as late as possible as it modifies e.g. graphicx
-  $if(latex-dir-rtl)$
-  \usepackage[RTLdocument]{bidi}
-  $else$
-  \usepackage{bidi}
-  $endif$
-\fi
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \TeXXeTstate=1
-  \newcommand{\RL}[1]{\beginR #1\endR}
-  \newcommand{\LR}[1]{\beginL #1\endL}
-  \newenvironment{RTL}{\beginR}{\endR}
-  \newenvironment{LTR}{\beginL}{\endL}
-\fi
-$endif$
-$for(header-includes)$
-$header-includes$
-$endfor$
 
-$if(title)$
-\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
-$endif$
-$if(subtitle)$
-\providecommand{\subtitle}[1]{}
-\subtitle{$subtitle$}
-$endif$
-$if(author)$
-\author{$for(author)$$author$$sep$ \and $endfor$}
-$endif$
-\date{$date$}
+%kmq:
+% Questions
+\definecolor{uibred}{RGB}{170, 0, 0}
+% Titles
+\definecolor{uibblue}{RGB}{0, 84, 115}
+% Principles
+\definecolor{uibgreen}{RGB}{119, 175, 0}
+%
+\definecolor{uibgreenish}{RGB}{50, 105, 0}
+%
+\definecolor{uiborange}{RGB}{217, 89, 0}
+%
+\definecolor{uibdeepLavender}{RGB}{147, 112, 219}
+%
+\definecolor{uibpalevioletred}{RGB}{219, 112, 147}
+%
+\definecolor{uibindigopersian}{RGB}{50, 18, 122}
+%%
+\definecolor{uibpersianblue}{RGB}{28, 57, 187}
+%
+\definecolor{uibwhite}{RGB}{255,255,255}
+
+%ColouringBlock
+%{\color{uibgreen}
+%{\color{uibdeepLavender}
+%{\color{uibblue}
+
+% Created the below for Sidenotes
+\renewcommand{\verse}[1]{\textsuperscript{#1}}
+
+\newcommand{\sidenote}[1]{% \sidenote{<side note>}
+  \refstepcounter{sidenote}\mbox{\textsuperscript{\alph{sidenote}}}%
+  \marginpar{\footnotesize\raggedright\strut\mbox{\textsuperscript{\alph{sidenote}} }#1}%
+}
+\newcounter{sidenote}
+\setlength{\marginparwidth}{.8in}
+\reversemarginpar
+\newcommand{\note}[1]{[#1]}
+% End of the below,
 
 \begin{document}
 $if(title)$
@@ -217,9 +227,7 @@ $include-before$
 $endfor$
 $if(toc)$
 {
-$if(colorlinks)$
-\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
-$endif$
+\hypersetup{linkcolor=black}
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 }
